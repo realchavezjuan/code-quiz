@@ -1,54 +1,63 @@
+// all elements created in script.js get appended to center div
 var centerDiv = document.querySelector(".center-div");
+// +1 as each question is answered
+var index = 0;
+// +1 after every correct answer
+var correctAnswers = 0;
+// creates question element
+var questionEl = document.createElement("h2");
+//creates asnwer button elements
+var btnA = document.createElement("button");
+btnA.className = "answerBtn";
+var btnB = document.createElement("button");
+btnB.className = "answerBtn";
+var btnC = document.createElement("button");
+btnC.className = "answerBtn";
+var btnD = document.createElement("button");
+btnD.className = "answerBtn";
+// global array of answers. Allows all functions to access.
+var answers = [
+    {
+        allAnswers:{
+            a: "3",
+            b: "1",
+            c: "0",
+            d: "4"
+        },
+        correctAnswer: "4"
+    },
+    {
+        allAnswers:{
+            a: "4",
+            b: "6",
+            c: "3",
+            d: "0"
+        },
+        correctAnswer: "0"
+    },
+    {
+        allAnswers:{
+            a: "0",
+            b: "5",
+            c: "4",
+            d: "1"
+        },
+        correctAnswer: "1"
+    },
+    {
+        allAnswers:{
+            a: "3",
+            b: "0",
+            c: "5",
+            d: "4"
+        },
+        correctAnswer: "4"
+    }
+];
 
-var beginQuiz = function (){
+var startQuiz = function (event){
 
-    // var questions = [
-    //     {
-    //         1: "How much is 2 + 2?",
-    //         answers: {
-    //             a: "3",
-    //             c: "1",
-    //             d: "0"
-    //         },
-    //         correctAnswer: {
-    //             b: "4"
-    //         }
-    //     },
-    //     {
-    //         2: "what is 2 x 2?",
-    //         answers: {
-    //             a: "0",
-    //             c: "6",
-    //             d: "3"
-    //         },
-    //         correctAnswer: {
-    //             b: "4"
-    //         }
-    //     },
-    //     {
-    //         3: "what is 2 - 2?",
-    //         answers: {
-    //             a: "2",
-    //             c: "8",
-    //             d: "1"
-    //         },
-    //         correctAnswer: {
-    //             b: "0"
-    //         }
-    //     },
-    //     {
-    //         4: "what is 2 / 2?",
-    //         answers: {
-    //             a: "3",
-    //             c: "0",
-    //             d: "5"
-    //         },
-    //         correctAnswer: {
-    //             b: "1"
-    //         }
-    //     }
-    // ];
-
+    //creates question
     var questions = [
         "whats two plus two?",
         "whats 2 minus 2",
@@ -56,79 +65,65 @@ var beginQuiz = function (){
         "whats 2 times 2"
     ];
 
-    var answers = [
-        {
-            a: "3",
-            c: "1",
-            d: "0"
-        },
-        {
-            a: "4",
-            c: "6",
-            d: "3"
-        },
-        {
-            a: "0",
-            c: "5",
-            d: "1"
-        },
-        {
-            a: "3",
-            c: "0",
-            d: "5"
-        }
-    ];
-    
-    for (var i = 0; i<answers.length; i++){
-        console.log("this is by index: " + JSON.stringify(answers[i]));
+    // redifnes text in question element
+    questionEl.innerHTML = questions[index];
+    centerDiv.appendChild(questionEl);
 
-        for(letter in answers[i]){
-            console.log(answers[i][letter]);
-        }
+    // redefines text in answer buttons
+    btnA.innerHTML = answers[index].allAnswers.a;
+    centerDiv.appendChild(btnA);
 
-    }
+    btnB.innerHTML = answers[index].allAnswers.b;
+    centerDiv.appendChild(btnB);
 
-        // creates answer buttons
-        var btnA = document.createElement("button");
-        btnA.innerHTML = "A";
-        btnA.className = "answerBtn";
-        centerDiv.appendChild(btnA);
+    btnC.innerHTML = answers[index].allAnswers.c;
+    centerDiv.appendChild(btnC);
 
-        var btnB = document.createElement("button");
-        btnB.innerHTML = "B";
-        btnB.className = "answerBtn";
-        centerDiv.appendChild(btnB);
+    btnD.innerHTML = answers[index].allAnswers.d;
+    centerDiv.appendChild(btnD);
 
-        var btnC = document.createElement("button");
-        btnC.innerHTML = "C";
-        btnC.className = "answerBtn";
-        centerDiv.appendChild(btnC);
+    console.log("You are on Question " + (index + 1) + "/5"); 
 
-        var btnD = document.createElement("button");
-        btnD.innerHTML = "D";
-        btnD.className = "answerBtn";
-        centerDiv.appendChild(btnD);
+    //computer expects user to click a button
+    btnA.addEventListener("click", userResponds);
+    btnB.addEventListener("click", userResponds);
+    btnC.addEventListener("click", userResponds);
+    btnD.addEventListener("click", userResponds);
 
-    for (var i = 0; i<questions.length; i++){
-
-        //asks the question
-        var questionOne = document.createElement("h2");
-        questionOne.innerHTML = questions[i];
-        centerDiv.appendChild(questionOne);
-
-        // redefines text in answer buttons
-        btnA.innerHTML = "a";
-
-        btnB.innerHTML = "B";
-
-        btnC.innerHTML = "C";
-   
-        btnD.innerHTML = "D";
-    }
 }
 
-var start = function(){
-    var centerDiv = document.querySelector(".center-div");
+var userResponds = function(event) {
+
+    var answerBtnEl = event.target;
+    answerBtnEl = answerBtnEl.innerHTML;
+    console.log(answerBtnEl);
+
+    if (answerBtnEl === answers[index].correctAnswer){
+        correctAnswers++;
+    }
+    
+    index++;
+
+    questionEl.remove();
+    btnA.remove();
+    btnB.remove();
+    btnC.remove();
+    btnD.remove();
+
+    if (index === 4){
+        highscore();
+    }
+
+    startQuiz();
+
+
+}
+
+var highscore = function() { 
+    questionEl.innerHTML = "Your Score: " + (correctAnswers + 1) + "/5";
+}
+
+var welcomePage = function(event){
 
     //creates home title
     var title = document.createElement("h1");
@@ -146,16 +141,15 @@ var start = function(){
     startBtn.innerHTML = "START";
     centerDiv.appendChild(startBtn);
 
-    centerDiv.addEventListener("click", function() {
-        console.log("hello");
+    startBtn.addEventListener("click", function() {
         title.remove();
         description.remove();
         startBtn.remove();
-        beginQuiz();
+        startQuiz();
     });
 }
 
-start();
+welcomePage();
 
 //when start button is pressed, ask a question
 // question will have 4 options
