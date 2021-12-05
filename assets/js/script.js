@@ -57,7 +57,7 @@ var answers = [
 
 var startQuiz = function (event){
 
-    //creates question
+    //creates questions
     var questions = [
         "whats two plus two?",
         "whats 2 minus 2",
@@ -65,7 +65,7 @@ var startQuiz = function (event){
         "whats 2 times 2"
     ];
 
-    // redifnes text in question element
+    // redefines text in question element
     questionEl.innerHTML = questions[index];
     centerDiv.appendChild(questionEl);
 
@@ -82,7 +82,7 @@ var startQuiz = function (event){
     btnD.innerHTML = answers[index].allAnswers.d;
     centerDiv.appendChild(btnD);
 
-    console.log("You are on Question " + (index + 1) + "/5"); 
+    console.log("You are on question " + (index + 1) + "/4"); 
 
     //computer expects user to click a button
     btnA.addEventListener("click", userResponds);
@@ -96,10 +96,13 @@ var userResponds = function(event) {
 
     var answerBtnEl = event.target;
     answerBtnEl = answerBtnEl.innerHTML;
-    console.log(answerBtnEl);
 
     if (answerBtnEl === answers[index].correctAnswer){
         correctAnswers++;
+        console.log("CORRECT");
+    }
+    else{
+        console.log("WRONG");
     }
     
     index++;
@@ -110,17 +113,21 @@ var userResponds = function(event) {
     btnC.remove();
     btnD.remove();
 
-    if (index === 4){
+    if (index <= 3 ){
+        startQuiz();
+        
+    }
+    else {
         highscore();
     }
-
-    startQuiz();
-
 
 }
 
 var highscore = function() { 
-    questionEl.innerHTML = "Your Score: " + (correctAnswers + 1) + "/5";
+    console.log("Your Score: " + correctAnswers + "/4");
+    var questionEl = document.createElement("h2");
+    questionEl.innerHTML = "Your Score: " + (correctAnswers + 1) + "/4";
+    centerDiv.appendChild(questionEl);
 }
 
 var welcomePage = function(event){
