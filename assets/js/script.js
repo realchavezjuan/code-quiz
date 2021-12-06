@@ -146,6 +146,7 @@ var nextQuestion = function(event) {
 var highscore = function() {
     clearInterval(counter);
     timerEl.innerText = "0";
+    centerDiv.appendChild(questionEl);
     questionEl.innerHTML = "Your Score: " + correctAnswers + "/4";
     btnA.remove();
     btnB.remove();
@@ -153,20 +154,36 @@ var highscore = function() {
     btnD.remove();
 
     console.log("Your Score: " + correctAnswers + "/4");
-    centerDiv.appendChild(questionEl);
 
     // check for local High Score
-    var highScore=localStorage.getItem("High Score: ");
+    var highScore = localStorage.getItem("High Score: ");
     if(highScore === null) {
         highScore = 0;
     }
-    questionEl.innerHTML = "The High Score: " + highScore;
+
+    // create a high score element
+    var highScoreEl = document.createElement("h2");
+    centerDiv.appendChild(highScoreEl);
+
     //New high score
     if (correctAnswers > highScore){
-        localStorage.setItem("High Score: ", correctAnswers);
-    }
 
-   
+        //ask for persons name
+        var person = prompt("Add your name to the high score!");
+
+        //cant leave prompt blank
+        if (person!=null){
+            localStorage.setItem("highScore", correctAnswers);
+            localStorage.setItem("person", person);
+            highScore = localStorage.getItem("highScore");
+            person = localStorage.getItem("person");
+            highScoreEl.innerHTML = "The High Score: " + highScore + "/4 by " + person;
+        }
+    }
+    //if no new high score, print old high score
+    else{
+    highScoreEl.innerHTML = "The High Score: " + highScore + "/4 by " + person;
+    }
 
 }
 
