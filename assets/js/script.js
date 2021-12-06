@@ -1,5 +1,7 @@
 // all elements created in script.js get appended to center div
 var centerDiv = document.querySelector(".center-div");
+//timer element
+var timerEl = document.getElementById("timer");
 // +1 as each question is answered
 var index = 0;
 // +1 after every correct answer
@@ -15,54 +17,71 @@ var btnC = document.createElement("button");
 btnC.className = "answerBtn";
 var btnD = document.createElement("button");
 btnD.className = "answerBtn";
+
 // global array of answers. Allows all functions to access.
 var answers = [
     {
         allAnswers:{
-            a: "3",
-            b: "1",
-            c: "0",
-            d: "4"
+            a: "68",
+            b: "64",
+            c: "96",
+            d: "72"
         },
-        correctAnswer: "4"
+        correctAnswer: "72"
     },
     {
         allAnswers:{
-            a: "4",
-            b: "6",
-            c: "3",
-            d: "0"
+            a: "9",
+            b: "10",
+            c: "11",
+            d: "13"
         },
-        correctAnswer: "0"
+        correctAnswer: "11"
     },
     {
         allAnswers:{
-            a: "0",
-            b: "5",
-            c: "4",
-            d: "1"
+            a: "Lincoln",
+            b: "Pierre",
+            c: "Bismarck",
+            d: "Cheyenne"
         },
-        correctAnswer: "1"
+        correctAnswer: "Pierre"
     },
     {
         allAnswers:{
-            a: "3",
-            b: "0",
-            c: "5",
-            d: "4"
+            a: "1984",
+            b: "1992",
+            c: "1991",
+            d: "1986"
         },
-        correctAnswer: "4"
+        correctAnswer: "1984"
     }
 ];
+//timer 
+var count = 30;
+var counter;
 
-var startQuiz = function (event){
+var timer = function() {
+
+    count = count - 1;
+
+    if (count <= 0) {
+        clearInterval(counter); //ends counter
+        highscore();
+    }
+
+    //Do code for showing the number of seconds here
+    timerEl.innerText = count;
+}
+
+var theQuiz = function (event){
 
     //creates questions
     var questions = [
-        "whats two plus two?",
-        "whats 2 minus 2",
-        "whats 2 divided by 2",
-        "whats 2 times 2"
+        "What is 8 x 9?",
+        "What is 121 / 11?",
+        "What is the capital of South Dekota?",
+        "In what year was the first Machintosh Computer introduced?"
     ];
 
     // redefines text in question element
@@ -85,14 +104,14 @@ var startQuiz = function (event){
     console.log("You are on question " + (index + 1) + "/4"); 
 
     //computer expects user to click a button
-    btnA.addEventListener("click", userResponds);
-    btnB.addEventListener("click", userResponds);
-    btnC.addEventListener("click", userResponds);
-    btnD.addEventListener("click", userResponds);
+    btnA.addEventListener("click", nextQuestion);
+    btnB.addEventListener("click", nextQuestion);
+    btnC.addEventListener("click", nextQuestion);
+    btnD.addEventListener("click", nextQuestion);
 
 }
 
-var userResponds = function(event) {
+var nextQuestion = function(event) {
 
     var answerBtnEl = event.target;
     answerBtnEl = answerBtnEl.innerHTML;
@@ -103,6 +122,7 @@ var userResponds = function(event) {
     }
     else{
         console.log("WRONG");
+        count = count - 5;
     }
     
     index++;
@@ -114,7 +134,7 @@ var userResponds = function(event) {
     btnD.remove();
 
     if (index <= 3 ){
-        startQuiz();
+        theQuiz();
         
     }
     else {
@@ -123,14 +143,37 @@ var userResponds = function(event) {
 
 }
 
-var highscore = function() { 
+var highscore = function() {
+    clearInterval(counter);
+    timerEl.innerText = "0";
+    questionEl.innerHTML = "Your Score: " + correctAnswers + "/4";
+    btnA.remove();
+    btnB.remove();
+    btnC.remove();
+    btnD.remove();
+
     console.log("Your Score: " + correctAnswers + "/4");
-    var questionEl = document.createElement("h2");
-    questionEl.innerHTML = "Your Score: " + (correctAnswers + 1) + "/4";
     centerDiv.appendChild(questionEl);
+
+    // check for local High Score
+    var highScore=localStorage.getItem("High Score: ");
+    if(highScore === null) {
+        highScore = 0;
+    }
+    questionEl.innerHTML = "The High Score: " + highScore;
+    //New high score
+    if (correctAnswers > highScore){
+        localStorage.setItem("High Score: ", correctAnswers);
+    }
+
+   
+
 }
 
 var welcomePage = function(event){
+
+    //displays timer
+    timerEl.innerText = "30";
 
     //creates home title
     var title = document.createElement("h1");
@@ -152,16 +195,10 @@ var welcomePage = function(event){
         title.remove();
         description.remove();
         startBtn.remove();
-        startQuiz();
+        theQuiz();
+        //1000 will  run it every 1 second
+        counter = setInterval(timer, 1000);
     });
 }
 
 welcomePage();
-
-//when start button is pressed, ask a question
-// question will have 4 options
-//3 answers will be wrong and have an id of wrong
-//1 answer will be right and have an id of correct
-//when you answer question, determine if its right or wrong
-//if wrong, subtract time and ask a different question
-//if right, ask a different question 
